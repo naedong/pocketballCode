@@ -64,3 +64,63 @@ a, b는 머쓱이가 맞춰야 할 공이 놓인 좌표를 의미합니다.
 m	n	startX	startY	balls	result
 10	10	3	7	[[7, 7], [2, 7], [7, 3]]	[52, 37, 116]
 ```
+## 코드 설명 
+
+```kotlin 
+
+fun solution(m: Int, n: Int, startX: Int, startY: Int, balls: Array<IntArray>): IntArray {
+    // 볼 사이즈로 동적인 배열을 생성  
+    val answer = IntArray(balls.size)
+  
+    //출발점에서 왼쪽까지의 거리 
+    val startXToLeft = startX
+    
+    // 출발점에서 오른쪽까지의 거리
+    val startXToRight = m - startX
+    
+    // 출발점에서 아래쪽 끝까지 거리
+    val startYToDown = startY
+    
+    // 출발점에서 위쪽 끝까지의 거리
+    val startYToUp = n - startY
+  
+  
+      
+    val destXToLeft = balls.map { it[0] }
+    val destXToRight = destXToLeft.map { m - it }
+    val destYToDown = balls.map { it[1] }
+    val destYToUp = destYToDown.map { n - it }
+    
+    val left = destXToLeft.mapIndexed { index, destX ->
+        (startXToLeft + destX).toDouble().pow(2) + (startY - balls[index][1]).toDouble().pow(2)
+    }
+    val right = destXToRight.mapIndexed { index, destX ->
+        (startXToRight + destX).toDouble().pow(2) + (startY - balls[index][1]).toDouble().pow(2)
+    }
+    val down = destYToDown.mapIndexed { index, destY ->
+        (startYToDown + destY).toDouble().pow(2) + (startX - balls[index][0]).toDouble().pow(2)
+    }
+    val up = destYToUp.mapIndexed { index, destY ->
+        (startYToUp + destY).toDouble().pow(2) + (startX - balls[index][0]).toDouble().pow(2)
+    }
+
+    balls.forEachIndexed { index, ball ->
+        answer[index] = when {
+            ball[0] == startX -> {
+                if (ball[1] > startY) minOf(left[index], right[index], down[index])
+                else minOf(left[index], right[index], up[index])
+            }
+
+            ball[1] == startY -> {
+                if (ball[0] > startX) minOf(up[index], down[index], left[index])
+                else minOf(up[index], down[index], right[index])
+            }
+
+            else -> minOf(left[index], right[index], up[index], down[index])
+        }.toInt()
+    }
+    return answer
+}
+```
+
+* 시간복잡도를 높이기 위해 반복을 최대한 줄였습니다. 
