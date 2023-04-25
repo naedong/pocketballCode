@@ -123,4 +123,4 @@ fun solution(m: Int, n: Int, startX: Int, startY: Int, balls: Array<IntArray>): 
 }
 ```
 
-* 시간복잡도를 높이기 위해 반복을 최대한 줄였습니다. 
+* 시간복잡도를 줄이기 위해 반복을 최대한 줄였습니다. 
